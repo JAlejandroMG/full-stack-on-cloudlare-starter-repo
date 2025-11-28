@@ -28,8 +28,6 @@ export const linksTrpcRoutes = t.router({
         accountId: ctx.userInfo.userId,
         ...input
     })
-    //* Modified
-    // return "random-id";
     return linkId;
   }),
   updateLinkName: t.procedure
