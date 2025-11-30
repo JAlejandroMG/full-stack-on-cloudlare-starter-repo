@@ -119,7 +119,8 @@ export const LAST_30_DAYS_BY_COUNTRY: {
   },
 ];
 
-export const LINK_LIST = [
+//* Removed
+/*export const LINK_LIST = [
   {
     destinations: 6,
     linkId: "dAd5d",
@@ -138,7 +139,7 @@ export const LINK_LIST = [
     created: "2024-01-11T11:08:12Z",
     name: "Samsung Galaxy Buds",
   },
-];
+];*/
 
 export const EVALUATION_ISSUES: {
   id: string;
