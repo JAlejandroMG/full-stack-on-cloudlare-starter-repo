@@ -10,8 +10,6 @@ import { TRPCError } from "@trpc/server";
 import {
   ACTIVE_LINKS_LAST_HOUR,
   LAST_30_DAYS_BY_COUNTRY,
-  //* Removed
-//   LINK_LIST,
 } from "./dummy-data";
 
 export const linksTrpcRoutes = t.router({
@@ -22,9 +20,6 @@ export const linksTrpcRoutes = t.router({
       }),
     )
     .query(async ({ctx, input}) => {
-    //* Removed
-    //   return LINK_LIST;
-    //* Added
     return getLinks(ctx.userInfo.userId, input.offset?.toString())
     }),
   createLink: t.procedure.input(createLinkSchema).mutation(async ({ ctx, input }) => {

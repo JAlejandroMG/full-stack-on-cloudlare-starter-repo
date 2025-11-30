@@ -19,7 +19,6 @@ export async function createLink( data: CreateLinkSchemaType & { accountId: stri
     return id;
 }
 
-//* Added
 export async function getLinks(accountId: string, createdBefore?: string) {
     const db = getDb();
   
