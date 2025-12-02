@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 
 import { getDb } from "@/db/database";
 import { links } from "@/drizzle-out/schema";
-import { CreateLinkSchemaType } from "@/zod/links";
+import { CreateLinkSchemaType, destinationsSchema, DestinationsSchemaType, linkSchema } from "@/zod/links";
 import { and, desc, eq, gt } from "drizzle-orm";
 
 export async function createLink( data: CreateLinkSchemaType & { accountId: string } ) {
@@ -48,4 +48,55 @@ export async function getLinks(accountId: string, createdBefore?: string) {
       linkClicks: 6,
       destinations: Object.keys(JSON.parse(link.destinations as string)).length,
     }));
+  }
+
+  //* Added
+  export async function updateLinkName(linkId: string, name: string) {
+    const db = getDb();
+    await db
+      .update(links)
+      .set({
+        name,
+        updated: new Date().toISOString(),
+      })
+      .where(eq(links.linkId, linkId));
+  }
+
+  //* Added
+  export async function getLink(linkId: string) {
+    const db = getDb();
+  
+    const result = await db
+      .select()
+      .from(links)
+      .where(eq(links.linkId, linkId))
+      .limit(1);
+  
+    if (!result.length) {
+      return null;
+    }
+  
+    const link = result[0];
+    const parsedLink = linkSchema.safeParse(link);
+    if (!parsedLink.success) {
+      console.log(parsedLink.error);
+      throw new Error("BAD_REQUEST Error Parsing Link");
+    }
+    return parsedLink.data;
+  }
+
+  //* Added
+  export async function updateLinkDestinations(
+    linkId: string,
+    destinations: DestinationsSchemaType,
+  ) {
+    const destinationsParsed = destinationsSchema.parse(destinations);
+    const db = getDb();
+    await db
+      .update(links)
+      .set({
+        destinations: JSON.stringify(destinationsParsed),
+        updated: new Date().toISOString(),
+      })
+      .where(eq(links.linkId, linkId));
   }

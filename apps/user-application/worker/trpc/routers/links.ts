@@ -1,6 +1,6 @@
 import { t } from "@/worker/trpc/trpc-instance";
 import { z } from "zod";
-import { createLink, getLinks } from "@repo/data-ops/queries/links"
+import { createLink, getLink, getLinks, updateLinkDestinations, updateLinkName } from "@repo/data-ops/queries/links"
 import {
   createLinkSchema,
   destinationsSchema,
@@ -38,6 +38,8 @@ export const linksTrpcRoutes = t.router({
     )
     .mutation(async ({ input }) => {
       console.log(input.linkId, input.name);
+      //* Added
+      await updateLinkName(input.linkId, input.name);
     }),
   getLink: t.procedure
     .input(
@@ -45,8 +47,11 @@ export const linksTrpcRoutes = t.router({
         linkId: z.string(),
       }),
     )
-    .query(async ({}) => {
-      const data = {
+    .query(async ({ input }) => {
+      //* Added
+      const data = await getLink(input.linkId);
+      //* Removed
+      /*const data = {
         name: "My Sample Link",
         linkId: "link_123456789",
         accountId: "user_987654321",
@@ -57,7 +62,7 @@ export const linksTrpcRoutes = t.router({
         },
         created: "2024-01-15T10:30:00Z",
         updated: "2024-01-20T14:45:00Z",
-      };
+      };*/
       if (!data) throw new TRPCError({ code: "NOT_FOUND" });
       return data;
     }),
@@ -70,6 +75,8 @@ export const linksTrpcRoutes = t.router({
     )
     .mutation(async ({ input }) => {
       console.log(input.linkId, input.destinations);
+      //* Added
+      await updateLinkDestinations(input.linkId, input.destinations);
     }),
   activeLinks: t.procedure.query(async () => {
     return ACTIVE_LINKS_LAST_HOUR;
