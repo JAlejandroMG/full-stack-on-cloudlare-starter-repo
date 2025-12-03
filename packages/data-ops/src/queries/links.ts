@@ -50,7 +50,6 @@ export async function getLinks(accountId: string, createdBefore?: string) {
     }));
   }
 
-  //* Added
   export async function updateLinkName(linkId: string, name: string) {
     const db = getDb();
     await db
@@ -62,7 +61,6 @@ export async function getLinks(accountId: string, createdBefore?: string) {
       .where(eq(links.linkId, linkId));
   }
 
-  //* Added
   export async function getLink(linkId: string) {
     const db = getDb();
   
@@ -85,7 +83,6 @@ export async function getLinks(accountId: string, createdBefore?: string) {
     return parsedLink.data;
   }
 
-  //* Added
   export async function updateLinkDestinations(
     linkId: string,
     destinations: DestinationsSchemaType,
