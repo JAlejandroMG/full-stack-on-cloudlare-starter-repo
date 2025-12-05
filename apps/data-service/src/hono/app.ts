@@ -10,7 +10,6 @@ App.get('/:id', async (c) => {
 	//~ so this request is not the same as the one in src/index.ts
 	//~ Hono attaches a few different helper methods to make
 	//~ working with like cookies and headers really simple
-	// console.log(JSON.stringify(c.req.raw.cf));
 	const cf = c.req.raw.cf;
 	const country = cf?.country;
 	const lat = cf?.latitude;
