@@ -1,5 +1,8 @@
-import { getLink } from '@repo/data-ops/queries/links';
 import { Hono } from 'hono';
+
+import { getLink } from '@repo/data-ops/queries/links';
+import { cloudflareInfoSchema } from '@repo/data-ops/zod-schema/links';
+import { getDestinationForCountry } from '@/helpers/route-ops';
 
 //~ Regular Hono App
 //const App = new Hono();
@@ -11,22 +14,32 @@ App.get('/:id', async (c) => {
 	//~ so this request is not the same as the one in src/index.ts
 	//~ Hono attaches a few different helper methods to make
 	//~ working with like cookies and headers really simple
-	//* Removed
-	/*const cf = c.req.raw.cf;
-	const country = cf?.country;
-	const lat = cf?.latitude;
-	const long = cf?.longitude;*/
-
-	//* Added
 	const id = c.req.param('id');
-	const linkInfoFromDb = await getLink(id);
+	//* Modified
+	// const linkInfoFromDb = await getLink(id);
+	const linkInfo = await getLink(id);
+
+	//* Added
+	if (!linkInfo) {
+		//~ It should return a proper 404 page instead of just text
+		return c.text('Destination not found', 404);
+	}
+
+	//* Added
+	const cfHeader = cloudflareInfoSchema.safeParse(c.req.raw.cf);
+
+	//* Added
+	if (!cfHeader.success) {
+		return c.text('Invalid Cloudflare headers', 404);
+	}
+
+	//* Added
+	const headers = cfHeader.data;
+	//* Added
+	const destination = getDestinationForCountry(linkInfo, headers.country);
 
 	//* Removed
-	/*return c.json({
-		country,
-		lat,
-		long,
-	});*/
+	// return c.json(linkInfoFromDb);
 	//* Added
-	return c.json(linkInfoFromDb);
+	return c.redirect(destination);
 });
