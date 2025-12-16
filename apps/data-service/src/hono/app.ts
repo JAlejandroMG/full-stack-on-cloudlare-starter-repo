@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 
-// import { getLink } from '@repo/data-ops/queries/links';
 import { cloudflareInfoSchema } from '@repo/data-ops/zod-schema/links';
 import { getDestinationForCountry, getRoutingDestinations } from '@/helpers/route-ops';
 
@@ -15,9 +14,6 @@ App.get('/:id', async (c) => {
 	//~ Hono attaches a few different helper methods to make
 	//~ working with like cookies and headers really simple
 	const id = c.req.param('id');
-	//* Moved to helpers/route-ops.ts
-	// const linkInfo = await getLink(id);
-	//* Added
 	const linkInfo = await getRoutingDestinations(c.env, id);
 
 	if (!linkInfo) {
