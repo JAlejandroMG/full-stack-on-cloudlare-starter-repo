@@ -25,7 +25,6 @@
 			"remote": true
 		}
 	],
-	//* Added
 	"queues": {
 		"consumers": [
 			{
