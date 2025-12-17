@@ -25,10 +25,16 @@
 			"remote": true
 		}
 	],
-	//* Added
 	"queues": {
 		"consumers": [
 			{
+				"queue": "smart-links-data-queue-stage"
+			}
+		],
+		//* Added
+		"producers": [
+			{
+				"binding": "QUEUE",
 				"queue": "smart-links-data-queue-stage"
 			}
 		]

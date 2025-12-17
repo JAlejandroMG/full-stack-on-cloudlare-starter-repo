@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 
-import { cloudflareInfoSchema } from '@repo/data-ops/zod-schema/links';
 import { getDestinationForCountry, getRoutingDestinations } from '@/helpers/route-ops';
+import { cloudflareInfoSchema } from '@repo/data-ops/zod-schema/links';
+import { LinkClickMessageType } from '@repo/data-ops/zod-schema/queue';
 
 //~ Regular Hono App
 //const App = new Hono();
@@ -27,6 +28,38 @@ App.get('/:id', async (c) => {
 	}
 	const headers = cfHeader.data;
 	const destination = getDestinationForCountry(linkInfo, headers.country);
+	//* Added
+	const queueMessage: LinkClickMessageType = {
+		data: {
+			accountId: linkInfo.accountId,
+			country: headers.country,
+			destination,
+			id,
+			latitude: headers.latitude,
+			longitude: headers.longitude,
+			timestamp: new Date().toISOString(),
+		},
+		type: 'LINK_CLICK',
+	};
+	//~ use sendBatch to avoit iterating over several events
+	//~ this will make the operation faster and
+	//~ will avoid hitting a request limit
+	//~ Data will succesfully route to the Queue
+	//~ and it will take a few miliseconds
+	//~ to get an aknowledgement back from the Queue
+	// await c.env.QUEUE.send(queueMessage);
+
+	//~ Cloudflare specific runtime feature which
+	//~ allows to run an asynchronous task after
+	//~ the request has been fulfilled and avoids
+	//~ delaying it, but has up to 30 sec to
+	//~ ensure this worker stays running to complete task
+	//~ This method isn't 100% fail safe so this is
+	//~ not good for really sensible (like financial) data
+	c.executionCtx.waitUntil(
+		//~ it no longer has to await
+		c.env.QUEUE.send(queueMessage)
+	);
 
 	return c.redirect(destination);
 });
