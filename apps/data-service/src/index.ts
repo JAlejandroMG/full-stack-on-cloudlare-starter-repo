@@ -11,4 +11,12 @@ export default class DataService extends WorkerEntrypoint<Env> {
 	fetch(request: Request) {
 		return App.fetch(request, this.env, this.ctx);
 	}
+
+	//* Added
+	//~ Queue Consumer
+	async queue(batch: MessageBatch<unknown>) {
+		for (const message of batch.messages) {
+			console.log('Queue Event: ', message.body);
+		}
+	}
 }
