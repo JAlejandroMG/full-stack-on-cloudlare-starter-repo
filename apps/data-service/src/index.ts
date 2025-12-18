@@ -17,12 +17,8 @@ export default class DataService extends WorkerEntrypoint<Env> {
 	//~ Queue Consumer
 	async queue(batch: MessageBatch<unknown>) {
 		for (const message of batch.messages) {
-			//* Removed
-			// console.log('Queue Event: ', message.body);
-			//* Added
 			//~ safeParse doesn't throw an error if it fails
 			const parsedEvent = QueueMessageSchema.safeParse(message.body);
-			//* Addded
 			if (parsedEvent.success) {
 				const event = parsedEvent.data;
 

@@ -20,7 +20,6 @@ export const LinkClickMessageSchema = BaseQueueMessageSchema.extend({
 	}),
 });
 
-//* Added
 //~ This looks at the type, and then de data, should conform
 //~ with one of the elements of the schemas array.
 export const QueueMessageSchema = z.discriminatedUnion('type', [
