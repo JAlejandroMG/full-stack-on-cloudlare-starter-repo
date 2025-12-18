@@ -28,7 +28,6 @@ App.get('/:id', async (c) => {
 	}
 	const headers = cfHeader.data;
 	const destination = getDestinationForCountry(linkInfo, headers.country);
-	//* Added
 	const queueMessage: LinkClickMessageType = {
 		data: {
 			accountId: linkInfo.accountId,

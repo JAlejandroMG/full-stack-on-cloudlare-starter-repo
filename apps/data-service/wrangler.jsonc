@@ -31,7 +31,6 @@
 				"queue": "smart-links-data-queue-stage"
 			}
 		],
-		//* Added
 		"producers": [
 			{
 				"binding": "QUEUE",
