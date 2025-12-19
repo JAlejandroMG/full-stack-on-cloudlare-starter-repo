@@ -38,7 +38,6 @@
 			}
 		]
 	},
-	//* Added
 	"workflows": [
 		{
 			"binding": "DESTINATION_EVALUATION_WORKFLOW",
