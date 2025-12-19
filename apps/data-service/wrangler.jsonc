@@ -11,6 +11,10 @@
 	"observability": {
 		"enabled": true
 	},
+	//* Added
+	"browser": {
+		"binding": "VIRTUAL_BROWSER"
+	},
 	"d1_databases": [
 		{
 			"binding": "DB",
@@ -38,7 +42,6 @@
 			}
 		]
 	},
-	//* Added
 	"workflows": [
 		{
 			"binding": "DESTINATION_EVALUATION_WORKFLOW",
