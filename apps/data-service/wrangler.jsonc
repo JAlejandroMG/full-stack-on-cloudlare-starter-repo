@@ -37,5 +37,13 @@
 				"queue": "smart-links-data-queue-stage"
 			}
 		]
-	}
+	},
+	//* Added
+	"workflows": [
+		{
+			"binding": "DESTINATION_EVALUATION_WORKFLOW",
+			"class_name": "DestinationEvaluationWorkflow",
+			"name": "destination-evaluation-workflow"
+		}
+	]
 }

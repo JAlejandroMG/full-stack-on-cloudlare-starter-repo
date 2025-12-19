@@ -11,7 +11,6 @@ import {
 } from '@/zod/links';
 import { LinkClickMessageType } from '@/zod/queue';
 
-//* Added
 export async function addLinkClick(info: LinkClickMessageType['data']) {
 	const db = getDb();
 	await db.insert(linkClicks).values({

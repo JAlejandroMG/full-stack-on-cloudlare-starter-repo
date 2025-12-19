@@ -1,8 +1,11 @@
 import { WorkerEntrypoint } from 'cloudflare:workers';
+
 import { App } from './hono/app';
+import { handleLinkClick } from './queue-handlers/link-clicks';
 import { initDatabase } from '@repo/data-ops/database';
 import { QueueMessageSchema } from '@repo/data-ops/zod-schema/queue';
-import { handleLinkClick } from './queue-handlers/link-clicks';
+//* Added
+export { DestinationEvaluationWorkflow } from './workflows/destination-evaluation-workflow';
 
 export default class DataService extends WorkerEntrypoint<Env> {
 	constructor(ctx: ExecutionContext, env: Env) {
@@ -17,12 +20,8 @@ export default class DataService extends WorkerEntrypoint<Env> {
 	//~ Queue Consumer
 	async queue(batch: MessageBatch<unknown>) {
 		for (const message of batch.messages) {
-			//* Removed
-			// console.log('Queue Event: ', message.body);
-			//* Added
 			//~ safeParse doesn't throw an error if it fails
 			const parsedEvent = QueueMessageSchema.safeParse(message.body);
-			//* Addded
 			if (parsedEvent.success) {
 				const event = parsedEvent.data;
 
