@@ -4,14 +4,11 @@ import { aiDestinationChecker } from '@/helpers/ai-destination-checker';
 
 export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, DestinationStatusEvaluationParams> {
 	async run(event: Readonly<WorkflowEvent<DestinationStatusEvaluationParams>>, step: WorkflowStep) {
+		//~ Then this subsequently could be used by
+		//~ other steps in this workflow
 		const collectedData = await step.do('Collect rendered destination page data', async () => {
 			return collectDestinationInfo(this.env, event.payload.destinationUrl);
 		});
-
-		//~ Then this subsequently could be used by
-		//~ other steps in this workflow
-		//* Removed
-		//console.log(collectedData);
 
 		const aiStatus = await step.do(
 			'Use AI to check status of page',
