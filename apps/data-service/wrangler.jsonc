@@ -11,6 +11,10 @@
 	"observability": {
 		"enabled": true
 	},
+	//* Added
+	"ai": {
+		"binding": "AI"
+	},
 	"browser": {
 		"binding": "VIRTUAL_BROWSER"
 	},

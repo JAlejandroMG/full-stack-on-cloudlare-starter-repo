@@ -1,5 +1,6 @@
 import { WorkflowEntrypoint, WorkflowEvent, WorkflowStep } from 'cloudflare:workers';
 import { collectDestinationInfo } from '@/helpers/browser-render';
+import { aiDestinationChecker } from '@/helpers/ai-destination-checker';
 
 export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, DestinationStatusEvaluationParams> {
 	async run(event: Readonly<WorkflowEvent<DestinationStatusEvaluationParams>>, step: WorkflowStep) {
@@ -9,6 +10,20 @@ export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, Desti
 
 		//~ Then this subsequently could be used by
 		//~ other steps in this workflow
-		console.log(collectedData);
+		//* Removed
+		//console.log(collectedData);
+
+		const aiStatus = await step.do(
+			'Use AI to check status of page',
+			{
+				retries: {
+					delay: 0,
+					limit: 0,
+				},
+			},
+			async () => {
+				return await aiDestinationChecker(this.env, collectedData.bodyText);
+			}
+		);
 	}
 }
