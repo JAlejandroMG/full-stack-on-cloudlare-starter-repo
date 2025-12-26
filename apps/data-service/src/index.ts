@@ -7,7 +7,6 @@ import { QueueMessageSchema } from '@repo/data-ops/zod-schema/queue';
 export { DestinationEvaluationWorkflow } from './workflows/destination-evaluation-workflow';
 
 export default class DataService extends WorkerEntrypoint<Env> {
-	//* Comment added
 	//~ A Workflow is a resource that is triggered along with a Worker,
 	//~ therefore, this constructor is not going to be called
 	//~ when a Workflow is triggered, so the DB needs to be

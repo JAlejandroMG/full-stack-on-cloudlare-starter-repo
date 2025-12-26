@@ -7,7 +7,6 @@ import { addEvaluation } from '@repo/data-ops/queries/evaluations';
 
 export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, DestinationStatusEvaluationParams> {
 	async run(event: Readonly<WorkflowEvent<DestinationStatusEvaluationParams>>, step: WorkflowStep) {
-		//* Added
 		initDatabase(this.env.DB);
 
 		//~ Then this subsequently could be used by
@@ -29,7 +28,6 @@ export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, Desti
 			}
 		);
 
-		//* Added
 		const evaluationId = await step.do('Save evaluation in database', async () => {
 			return await addEvaluation({
 				accountId: event.payload.accountId,
