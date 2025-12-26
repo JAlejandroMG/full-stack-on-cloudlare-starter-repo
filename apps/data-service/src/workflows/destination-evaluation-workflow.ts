@@ -38,7 +38,6 @@ export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, Desti
 			});
 		});
 
-		//* Added
 		await step.do('Backup destination HTML in R2', async () => {
 			const accountId = event.payload.accountId;
 			//~ An extension could be added to the file where the data is going to be stored

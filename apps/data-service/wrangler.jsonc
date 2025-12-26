@@ -44,7 +44,6 @@
 			}
 		]
 	},
-	//* Added
 	"r2_buckets": [
 		{
 			"binding": "BUCKET",
