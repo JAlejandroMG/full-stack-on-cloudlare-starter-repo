@@ -7,7 +7,6 @@ import { addEvaluation } from '@repo/data-ops/queries/evaluations';
 
 export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, DestinationStatusEvaluationParams> {
 	async run(event: Readonly<WorkflowEvent<DestinationStatusEvaluationParams>>, step: WorkflowStep) {
-		//* Added
 		initDatabase(this.env.DB);
 
 		//~ Then this subsequently could be used by
@@ -29,7 +28,6 @@ export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, Desti
 			}
 		);
 
-		//* Added
 		const evaluationId = await step.do('Save evaluation in database', async () => {
 			return await addEvaluation({
 				accountId: event.payload.accountId,
@@ -38,6 +36,16 @@ export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, Desti
 				reason: aiStatus.statusReason,
 				status: aiStatus.status,
 			});
+		});
+
+		//* Added
+		await step.do('Backup destination HTML in R2', async () => {
+			const accountId = event.payload.accountId;
+			//~ An extension could be added to the file where the data is going to be stored
+			const r2PathHtml = `evaluations/${accountId}/html/${evaluationId}`;
+			const r2PathBodyText = `evaluations/${accountId}/body-text/${evaluationId}`;
+			await this.env.BUCKET.put(r2PathHtml, collectedData.html);
+			await this.env.BUCKET.put(r2PathBodyText, collectedData.bodyText);
 		});
 	}
 }
