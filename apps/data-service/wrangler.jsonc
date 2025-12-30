@@ -24,11 +24,28 @@
 			"remote": true
 		}
 	],
+	//* Added
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "EVALUATION_SCHEDULER",
+				"class_name": "EvaluationScheduler"
+			}
+		]
+	},
 	"kv_namespaces": [
 		{
 			"binding": "CACHE",
 			"id": "746c663591c1472eb4c27d55cd4beb6b",
 			"remote": true
+		}
+	],
+	//* Added
+	"migrations": [
+		{
+			"tag": "v1",
+			//~ Is not using SQLite, only KV
+			"new_classes": ["EvaluationScheduler"]
 		}
 	],
 	"queues": {
