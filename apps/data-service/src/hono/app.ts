@@ -9,6 +9,22 @@ import { LinkClickMessageType } from '@repo/data-ops/zod-schema/queue';
 //~ For Cloudflare to make it available in the worker entry point
 export const App = new Hono<{ Bindings: Env }>();
 
+//* Added
+//~ API for Durable Object
+App.get('/do/:name', async (c) => {
+	//~ This could be done in an API like here,
+	//~ or from a Workflow, or from a Queue
+	const name = c.req.param('name');
+	const doId = c.env.EVALUATION_SCHEDULER.idFromName(name);
+	const stub = c.env.EVALUATION_SCHEDULER.get(doId);
+	await stub.incrementCount();
+	const count = await stub.getCount();
+
+	return c.json({
+		count,
+	});
+});
+
 App.get('/:id', async (c) => {
 	//~ Hono make some preprocess to the original Cloudflare request
 	//~ so this request is not the same as the one in src/index.ts

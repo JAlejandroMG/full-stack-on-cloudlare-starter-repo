@@ -4,7 +4,9 @@ import { App } from './hono/app';
 import { handleLinkClick } from './queue-handlers/link-clicks';
 import { initDatabase } from '@repo/data-ops/database';
 import { QueueMessageSchema } from '@repo/data-ops/zod-schema/queue';
-export { DestinationEvaluationWorkflow } from './workflows/destination-evaluation-workflow';
+//* Added
+export { EvaluationScheduler } from '@/durable-objects/evaluation-scheduler';
+export { DestinationEvaluationWorkflow } from '@/workflows/destination-evaluation-workflow';
 
 export default class DataService extends WorkerEntrypoint<Env> {
 	//~ A Workflow is a resource that is triggered along with a Worker,
