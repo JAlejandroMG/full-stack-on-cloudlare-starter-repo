@@ -9,7 +9,6 @@ import { LinkClickMessageType } from '@repo/data-ops/zod-schema/queue';
 //~ For Cloudflare to make it available in the worker entry point
 export const App = new Hono<{ Bindings: Env }>();
 
-//* Added
 //~ API for Durable Object
 App.get('/do/:name', async (c) => {
 	//~ This could be done in an API like here,
