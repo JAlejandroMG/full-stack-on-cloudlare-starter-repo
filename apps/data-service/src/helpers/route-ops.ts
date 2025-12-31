@@ -1,5 +1,6 @@
 import { getLink } from '@repo/data-ops/queries/links';
 import { linkSchema, LinkSchemaType } from '@repo/data-ops/zod-schema/links';
+import { LinkClickMessageType } from '@repo/data-ops/zod-schema/queue';
 
 export function getDestinationForCountry(linkInfo: LinkSchemaType, countryCode?: string) {
 	if (!countryCode) {
@@ -54,4 +55,11 @@ async function saveLinkInfoToKv(env: Env, id: string, linkInfo: LinkSchemaType) 
 	} catch (error) {
 		console.error('Error saving link info to KV:', error);
 	}
+}
+
+//* Added
+export async function scheduleEvalWorkflow(env: Env, event: LinkClickMessageType) {
+	const doId = env.EVALUATION_SCHEDULER.idFromName(`${event.data.id}:${event.data.destination}`);
+	const stub = env.EVALUATION_SCHEDULER.get(doId);
+	await stub.collectLinkClick(event.data.accountId, event.data.country || 'UNKNOWN', event.data.destination, event.data.id);
 }

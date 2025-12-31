@@ -24,7 +24,6 @@
 			"remote": true
 		}
 	],
-	//* Added
 	"durable_objects": {
 		"bindings": [
 			{
@@ -40,7 +39,6 @@
 			"remote": true
 		}
 	],
-	//* Added
 	"migrations": [
 		{
 			"tag": "v1",
