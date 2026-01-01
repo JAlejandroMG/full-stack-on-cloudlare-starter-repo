@@ -57,7 +57,6 @@ async function saveLinkInfoToKv(env: Env, id: string, linkInfo: LinkSchemaType) 
 	}
 }
 
-//* Added
 export async function scheduleEvalWorkflow(env: Env, event: LinkClickMessageType) {
 	const doId = env.EVALUATION_SCHEDULER.idFromName(`${event.data.id}:${event.data.destination}`);
 	const stub = env.EVALUATION_SCHEDULER.get(doId);

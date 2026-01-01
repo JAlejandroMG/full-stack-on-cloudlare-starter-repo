@@ -1,7 +1,6 @@
 import moment from 'moment';
 import { DurableObject } from 'cloudflare:workers';
 
-//* Added
 interface ClickData {
 	accountId: string;
 	linkId: string;
@@ -10,23 +9,16 @@ interface ClickData {
 }
 
 export class EvaluationScheduler extends DurableObject<Env> {
-	//* Added
 	clickData: ClickData | undefined;
-	//* Removed
-	// count: number = 0;
 
 	constructor(ctx: DurableObjectState, env: Env) {
 		super(ctx, env);
 
 		ctx.blockConcurrencyWhile(async () => {
-			//* Added
 			this.clickData = await ctx.storage.get<ClickData>('click_data');
-			//* Removed
-			// this.count = (await ctx.storage.get('count')) || this.count;
 		});
 	}
 
-	//* Added
 	async collectLinkClick(accountId: string, destinationCountryCode: string, destinationUrl: string, linkId: string) {
 		this.clickData = {
 			accountId,
@@ -52,7 +44,6 @@ export class EvaluationScheduler extends DurableObject<Env> {
 		}
 	}
 
-	//* Added
 	//~ This alarm will trigger 10 seconds into the future
 	// async alarm(alarmInfo?: AlarmInvocationInfo): void | Promise<void> {
 	async alarm() {
@@ -71,16 +62,4 @@ export class EvaluationScheduler extends DurableObject<Env> {
 			},
 		});
 	}
-
-	//* Removed
-	/*async incrementCount() {
-		this.count++;
-		await this.ctx.storage.put('count', this.count);
-	}*/
-
-	//* Removed
-	/*async getCount() {
-		//~ Not need to go to storage since this is the most updated value
-		return this.count;
-	}*/
 }
