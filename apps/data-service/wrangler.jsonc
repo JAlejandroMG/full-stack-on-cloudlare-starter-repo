@@ -29,6 +29,11 @@
 			{
 				"name": "EVALUATION_SCHEDULER",
 				"class_name": "EvaluationScheduler"
+			},
+			//* Added
+			{
+				"name": "LINK_CLICK_TRACKER_OBJECT",
+				"class_name": "LinkClickTracker"
 			}
 		]
 	},
@@ -44,6 +49,11 @@
 			"tag": "v1",
 			//~ Is not using SQLite, only KV
 			"new_classes": ["EvaluationScheduler"]
+		},
+		//* Added
+		{
+			"tag": "v2",
+			"new_sqlite_classes": ["LinkClickTracker"]
 		}
 	],
 	"queues": {

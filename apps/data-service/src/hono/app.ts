@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 
-import { getDestinationForCountry, getRoutingDestinations } from '@/helpers/route-ops';
+import { captureLinkClickInBackground, getDestinationForCountry, getRoutingDestinations } from '@/helpers/route-ops';
 import { cloudflareInfoSchema } from '@repo/data-ops/zod-schema/links';
 import { LinkClickMessageType } from '@repo/data-ops/zod-schema/queue';
 
@@ -8,6 +8,16 @@ import { LinkClickMessageType } from '@repo/data-ops/zod-schema/queue';
 //const App = new Hono();
 //~ For Cloudflare to make it available in the worker entry point
 export const App = new Hono<{ Bindings: Env }>();
+
+//* Added
+//- This is not really needed, just to see the data in the browser
+App.get('/link-click/:accountId', async (c) => {
+	const accountId = c.req.param('accountId');
+	const doId = c.env.LINK_CLICK_TRACKER_OBJECT.idFromName(accountId);
+	const stub = c.env.LINK_CLICK_TRACKER_OBJECT.get(doId);
+
+	return await stub.fetch(c.req.raw);
+});
 
 App.get('/:id', async (c) => {
 	//~ Hono make some preprocess to the original Cloudflare request
@@ -56,8 +66,14 @@ App.get('/:id', async (c) => {
 	//~ This method isn't 100% fail safe so this is
 	//~ not good for really sensible (like financial) data
 	c.executionCtx.waitUntil(
+		//* Modified
 		//~ it no longer has to await
-		c.env.QUEUE.send(queueMessage)
+		// c.env.QUEUE.send(queueMessage)
+		//~ Cannot add a second method here
+		//~ so we should put them both
+		//~ in a single function in helpers/route-ops.ts
+		// c.env.LINK_CLICK_TRACKER_OBJECT
+		captureLinkClickInBackground(c.env, queueMessage)
 	);
 
 	return c.redirect(destination);
