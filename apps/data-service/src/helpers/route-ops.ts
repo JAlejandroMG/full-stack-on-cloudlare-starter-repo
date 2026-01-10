@@ -64,7 +64,6 @@ export async function scheduleEvalWorkflow(env: Env, event: LinkClickMessageType
 	await stub.collectLinkClick(event.data.accountId, event.data.country || 'UNKNOWN', event.data.destination, event.data.id);
 }
 
-//* Added
 export async function captureLinkClickInBackground(env: Env, event: LinkClickMessageType) {
 	await env.QUEUE.send(event);
 
