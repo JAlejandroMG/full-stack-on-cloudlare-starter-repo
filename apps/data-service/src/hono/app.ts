@@ -9,10 +9,23 @@ import { LinkClickMessageType } from '@repo/data-ops/zod-schema/queue';
 //~ For Cloudflare to make it available in the worker entry point
 export const App = new Hono<{ Bindings: Env }>();
 
-//* Added
-//- This is not really needed, just to see the data in the browser
-App.get('/link-click/:accountId', async (c) => {
-	const accountId = c.req.param('accountId');
+//* Modified
+App.get('/click-socket', async (c) => {
+	//* Added
+	const upgradeHeader = c.req.header('Upgrade');
+
+	//* Added
+	if (!upgradeHeader || upgradeHeader !== 'websocket') {
+		return c.text('Expected Upgrade: websocket', 426);
+	}
+
+	//* Modified
+	// const accountId = c.req.param('accountId');
+	const accountId = c.req.header('account-id');
+
+	//* Added
+	if (!accountId) return c.text('No Headers', 404);
+
 	const doId = c.env.LINK_CLICK_TRACKER_OBJECT.idFromName(accountId);
 	const stub = c.env.LINK_CLICK_TRACKER_OBJECT.get(doId);
 
@@ -66,7 +79,6 @@ App.get('/:id', async (c) => {
 	//~ This method isn't 100% fail safe so this is
 	//~ not good for really sensible (like financial) data
 	c.executionCtx.waitUntil(
-		//* Modified
 		//~ it no longer has to await
 		// c.env.QUEUE.send(queueMessage)
 		//~ Cannot add a second method here

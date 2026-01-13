@@ -34,9 +34,20 @@ export class LinkClickTracker extends DurableObject<Env> {
 		);
 	}
 
-	//- This is not really needed, just to see the data in the browser
 	async fetch(_: Request) {
-		const query = `
+		const webSocketPair = new WebSocketPair();
+		const [client, server] = Object.values(webSocketPair);
+		//~ This connection as a server WS instance is accepted by the DO
+		this.ctx.acceptWebSocket(server);
+
+		//~ With this, the 2 way connection with the client is established
+		return new Response(null, {
+			status: 101,
+			webSocket: client,
+		});
+
+		//* Removed
+		/*const query = `
             SELECT *
             FROM geo_link_clicks
             limit 100
@@ -54,6 +65,21 @@ export class LinkClickTracker extends DurableObject<Env> {
 					'Content-Type': 'application/json',
 				},
 			}
-		);
+		);*/
 	}
+
+	/*webSocketClose(ws: WebSocket, code: number, reason: string, wasClean: boolean): void | Promise<void> {}
+
+	webSocketError(ws: WebSocket, error: unknown): void | Promise<void> {}
+
+	async webSocketMessage(ws: WebSocket, message: string | ArrayBuffer): void | Promise<void> {
+		await ws.send(message); //~ This message would be sent back to the client
+		const connections = this.ctx.getWebSockets(); //~ This would get all WS client connections
+        //~ This would sent back a message to all connections except the sender
+        for (const con of connections) {
+            if (con !== ws) {
+                await con.send(message);
+            }
+        }
+	}*/
 }
