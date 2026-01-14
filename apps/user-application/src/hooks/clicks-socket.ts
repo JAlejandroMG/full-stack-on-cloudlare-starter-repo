@@ -1,22 +1,9 @@
-//* Removed
-/*import { useState } from "react";
-
-export function useClickSocket() {
-  const [isConnected, _] = useState(false);
-
-  // Mock connection state for dummy product
-  // In a real implementation, this would handle WebSocket connections
-
-  return { isConnected };
-}*/
-
 import { durableObjectGeoClickArraySchema } from '@repo/data-ops/zod-schema/links';
 import { useEffect, useRef, useState } from 'react';
 import { useGeoClickStore } from '@/hooks/geo-clicks-store';
 
 const MAX_RETRIES = 5;
 
-//* Added
 export function useClickSocket() {
 	const ws = useRef<WebSocket | null>(null);
 	const [isConnected, setIsConnected] = useState(false);
