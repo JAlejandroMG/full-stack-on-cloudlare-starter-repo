@@ -9,21 +9,18 @@ import { LinkClickMessageType } from '@repo/data-ops/zod-schema/queue';
 //~ For Cloudflare to make it available in the worker entry point
 export const App = new Hono<{ Bindings: Env }>();
 
-//* Modified
 App.get('/click-socket', async (c) => {
-	//* Added
 	const upgradeHeader = c.req.header('Upgrade');
 
-	//* Added
 	if (!upgradeHeader || upgradeHeader !== 'websocket') {
 		return c.text('Expected Upgrade: websocket', 426);
 	}
 
 	//* Modified
-	// const accountId = c.req.param('accountId');
-	const accountId = c.req.header('account-id');
+	// const accountId = c.req.header('account-id');
+	//~ Hardcoded
+	const accountId = '1234567890';
 
-	//* Added
 	if (!accountId) return c.text('No Headers', 404);
 
 	const doId = c.env.LINK_CLICK_TRACKER_OBJECT.idFromName(accountId);

@@ -45,41 +45,9 @@ export class LinkClickTracker extends DurableObject<Env> {
 			status: 101,
 			webSocket: client,
 		});
-
-		//* Removed
-		/*const query = `
-            SELECT *
-            FROM geo_link_clicks
-            limit 100
-        `;
-
-		const cursor = this.sql.exec(query);
-		const results = cursor.toArray();
-
-		return new Response(
-			JSON.stringify({
-				clicks: results,
-			}),
-			{
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}
-		);*/
 	}
 
-	/*webSocketClose(ws: WebSocket, code: number, reason: string, wasClean: boolean): void | Promise<void> {}
-
-	webSocketError(ws: WebSocket, error: unknown): void | Promise<void> {}
-
-	async webSocketMessage(ws: WebSocket, message: string | ArrayBuffer): void | Promise<void> {
-		await ws.send(message); //~ This message would be sent back to the client
-		const connections = this.ctx.getWebSockets(); //~ This would get all WS client connections
-        //~ This would sent back a message to all connections except the sender
-        for (const con of connections) {
-            if (con !== ws) {
-                await con.send(message);
-            }
-        }
-	}*/
+	webSocketClose(ws: WebSocket, code: number, reason: string, wasClean: boolean): void | Promise<void> {
+		console.log('Client Closed!');
+	}
 }
