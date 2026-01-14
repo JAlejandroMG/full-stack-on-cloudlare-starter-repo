@@ -46,4 +46,8 @@ export class LinkClickTracker extends DurableObject<Env> {
 			webSocket: client,
 		});
 	}
+
+	webSocketClose(ws: WebSocket, code: number, reason: string, wasClean: boolean): void | Promise<void> {
+		console.log('Client Closed!');
+	}
 }
