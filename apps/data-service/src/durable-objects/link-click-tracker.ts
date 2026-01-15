@@ -46,12 +46,10 @@ export class LinkClickTracker extends DurableObject<Env> {
 			time
 		);
 
-		//* Added
 		const alarm = await this.ctx.storage.getAlarm();
 		if (!alarm) await this.ctx.storage.setAlarm(moment().add(2, 'seconds').valueOf());
 	}
 
-	//* Added
 	async alarm() {
 		console.log('Linck cllicked alarm');
 		//~ Get the clicks data and the client side connections
@@ -68,7 +66,6 @@ export class LinkClickTracker extends DurableObject<Env> {
 		await deleteClicksBefore(this.sql, clicksData.oldestTime);
 	}
 
-	//* Added
 	async flushOffsetTimes(mostRecentOffsetTime: number, leastRecentOffsetTime: number) {
 		this.mostRecentOffsetTime = mostRecentOffsetTime;
 		this.leastRecentOffsetTime = leastRecentOffsetTime;
