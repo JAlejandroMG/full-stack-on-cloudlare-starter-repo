@@ -17,9 +17,9 @@ App.get('/click-socket', async (c) => {
 	}
 
 	//* Modified
-	// const accountId = c.req.header('account-id');
-	//~ Hardcoded
-	const accountId = '1234567890';
+	const accountId = c.req.header('account-id');
+	//* Removed
+	// const accountId = '1234567890';
 
 	if (!accountId) return c.text('No Headers', 404);
 
