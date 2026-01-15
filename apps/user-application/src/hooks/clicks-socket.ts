@@ -16,14 +16,16 @@ export function useClickSocket() {
 		const connect = () => {
 			const protocol =
 				//* Modified
-				// window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+				window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+				//* Removed
 				//- Hardcoded to be Removed
-				window.location.protocol === 'https:' ? 'wss:' : 'wss:';
+				// window.location.protocol === 'https:' ? 'wss:' : 'wss:';
 			const socket = new WebSocket(
 				//* Modified
-				// `${protocol}//${import.meta.env.VITE_BASE_HOST}/click-socket`
+				`${protocol}//${import.meta.env.VITE_BASE_HOST}/click-socket`
+				//* Removed
 				//- Hardcoded to be Removed
-				`${protocol}//data-service.jamg-developer.workers.dev/click-socket`
+				// `${protocol}//data-service.jamg-developer.workers.dev/click-socket`
 			);
 
 			socket.onopen = () => {
