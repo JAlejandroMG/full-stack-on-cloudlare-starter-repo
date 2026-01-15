@@ -21,7 +21,6 @@
 			"remote": true
 		}
 	],
-	//* Added
 	"services": [
 		{
 			"binding": "BACKEND_SERVICE",
