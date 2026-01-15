@@ -15,11 +15,15 @@ export function useClickSocket() {
 	useEffect(() => {
 		const connect = () => {
 			const protocol =
-				window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+				//* Modified
+				// window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+				//- Hardcoded to be Removed
+				window.location.protocol === 'https:' ? 'wss:' : 'wss:';
 			const socket = new WebSocket(
+				//* Modified
 				// `${protocol}//${import.meta.env.VITE_BASE_HOST}/click-socket`
-				//~ Hardcoded
-				`${protocol}//localhost:8787/click-socket`
+				//- Hardcoded to be Removed
+				`${protocol}//data-service.jamg-developer.workers.dev/click-socket`
 			);
 
 			socket.onopen = () => {

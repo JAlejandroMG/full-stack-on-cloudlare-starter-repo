@@ -1,7 +1,11 @@
+import { deleteClicksBefore, getRecentClicks } from '@/helpers/durable-queries';
 import { DurableObject } from 'cloudflare:workers';
 import moment from 'moment';
 
 export class LinkClickTracker extends DurableObject<Env> {
+	//* Added
+	leastRecentOffsetTime: number = 0;
+	mostRecentOffsetTime: number = 0;
 	sql: SqlStorage;
 
 	constructor(ctx: DurableObjectState, env: Env) {
@@ -9,6 +13,15 @@ export class LinkClickTracker extends DurableObject<Env> {
 		this.sql = ctx.storage.sql;
 
 		ctx.blockConcurrencyWhile(async () => {
+			//* Added
+			const [leastRecentOffsetTime, mostRecentOffsetTime] = await Promise.all([
+				ctx.storage.get<number>('leastRecentOffsetTime'),
+				ctx.storage.get<number>('mostRecentOffsetTime'),
+			]);
+			//* Added
+			this.leastRecentOffsetTime = leastRecentOffsetTime || this.leastRecentOffsetTime;
+			this.mostRecentOffsetTime = mostRecentOffsetTime || this.mostRecentOffsetTime;
+
 			this.sql.exec(`
                 CREATE TABLE IF NOT EXISTS geo_link_clicks (
                     country TEXT NOT NULL,
@@ -32,6 +45,35 @@ export class LinkClickTracker extends DurableObject<Env> {
 			longitude,
 			time
 		);
+
+		//* Added
+		const alarm = await this.ctx.storage.getAlarm();
+		if (!alarm) await this.ctx.storage.setAlarm(moment().add(2, 'seconds').valueOf());
+	}
+
+	//* Added
+	async alarm() {
+		console.log('Linck cllicked alarm');
+		//~ Get the clicks data and the client side connections
+		const clicksData = await getRecentClicks(this.sql, this.mostRecentOffsetTime);
+		const sockets = this.ctx.getWebSockets();
+
+		//~ Send the data to the client side connections
+		for (const socket of sockets) {
+			socket.send(JSON.stringify(clicksData.clicks));
+		}
+
+		//~ Clean up the data from the DB
+		await this.flushOffsetTimes(clicksData.mostRecentTime, clicksData.oldestTime);
+		await deleteClicksBefore(this.sql, clicksData.oldestTime);
+	}
+
+	//* Added
+	async flushOffsetTimes(mostRecentOffsetTime: number, leastRecentOffsetTime: number) {
+		this.mostRecentOffsetTime = mostRecentOffsetTime;
+		this.leastRecentOffsetTime = leastRecentOffsetTime;
+		await this.ctx.storage.put('mostRecentOffsetTime', this.mostRecentOffsetTime);
+		await this.ctx.storage.put('leastRecentOffsetTime', this.leastRecentOffsetTime);
 	}
 
 	async fetch(_: Request) {
