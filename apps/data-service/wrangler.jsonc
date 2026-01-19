@@ -12,6 +12,84 @@
 		"enabled": true,
 	},
 	"env": {
+		//* Added
+		"production": {
+			"ai": {
+				"binding": "AI",
+			},
+			"browser": {
+				"binding": "VIRTUAL_BROWSER",
+			},
+			"d1_databases": [
+				{
+					"binding": "DB",
+					//* Modified
+					"database_id": "8e28ada2-7c75-4600-9337-696b9ecd42f3",
+					//* Removed since we're not going to be developing in production
+					// "remote": true,
+				},
+			],
+			"durable_objects": {
+				"bindings": [
+					{
+						"name": "EVALUATION_SCHEDULER",
+						"class_name": "EvaluationScheduler",
+					},
+					{
+						"name": "LINK_CLICK_TRACKER_OBJECT",
+						"class_name": "LinkClickTracker",
+					},
+				],
+			},
+			"kv_namespaces": [
+				{
+					"binding": "CACHE",
+					//* Modified
+					"id": "6a7bc6c98db8406093c2423e3ac2cbd1",
+					//* Removed since we're not going to be developing in production
+					// "remote": true,
+				},
+			],
+			"migrations": [
+				{
+					"tag": "v1",
+					//~ Is not using SQLite, only KV
+					"new_classes": ["EvaluationScheduler"],
+				},
+				{
+					"tag": "v2",
+					"new_sqlite_classes": ["LinkClickTracker"],
+				},
+			],
+			"queues": {
+				"consumers": [
+					{
+						"queue": "smart-links-data-queue-production",
+					},
+				],
+				"producers": [
+					{
+						"binding": "QUEUE",
+						"queue": "smart-links-data-queue-production",
+					},
+				],
+			},
+			"r2_buckets": [
+				{
+					"binding": "BUCKET",
+					//* Modified
+					"bucket_name": "smart-links-eval-production",
+				},
+			],
+			"workflows": [
+				{
+					"binding": "DESTINATION_EVALUATION_WORKFLOW",
+					"class_name": "DestinationEvaluationWorkflow",
+					//* Modified
+					"name": "destination-evaluation-workflow-production",
+				},
+			],
+		},
 		"stage": {
 			"ai": {
 				"binding": "AI",

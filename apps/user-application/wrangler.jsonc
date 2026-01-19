@@ -15,6 +15,26 @@
 		"enabled": true,
 	},
 	"env": {
+		//* Added
+		"production": {
+			"d1_databases": [
+				{
+					"binding": "DB",
+					//* Modified
+					"database_id": "8e28ada2-7c75-4600-9337-696b9ecd42f3",
+					//* Removed since we're not going to be developing in production
+					// "remote": true,
+				},
+			],
+			"services": [
+				{
+					"binding": "BACKEND_SERVICE",
+					//* Removed since we're not going to be developing in production
+					// "remote": true,
+					"service": "data-service-production",
+				},
+			],
+		},
 		"stage": {
 			"d1_databases": [
 				{

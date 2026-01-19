@@ -5,6 +5,7 @@
 	"scripts": {
 		"cf-typegen": "wrangler types --env-interface BaseEnv --env stage",
 		"dev": "wrangler dev --x-remote-bindings",
+		"prod:deploy": "wrangler deploy --env production",
 		"stage:deploy": "wrangler deploy --env stage",
 		"start": "wrangler dev",
 		"test": "vitest"
