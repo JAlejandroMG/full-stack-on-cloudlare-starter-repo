@@ -9,84 +9,159 @@
 	"compatibility_date": "2025-06-17",
 	"compatibility_flags": ["nodejs_compat"],
 	"observability": {
-		"enabled": true
+		"enabled": true,
 	},
-	//* Added
 	"env": {
 		//* Added
-		"stage": {
-			//* Modified
+		"production": {
 			"ai": {
-				"binding": "AI"
+				"binding": "AI",
 			},
 			"browser": {
-				"binding": "VIRTUAL_BROWSER"
+				"binding": "VIRTUAL_BROWSER",
 			},
 			"d1_databases": [
 				{
 					"binding": "DB",
-					"database_id": "72d611c5-3bcd-4f6a-aeb7-e81b4eee96af",
-					"remote": true
-				}
+					//* Modified
+					"database_id": "8e28ada2-7c75-4600-9337-696b9ecd42f3",
+					//* Removed since we're not going to be developing in production
+					// "remote": true,
+				},
 			],
 			"durable_objects": {
 				"bindings": [
 					{
 						"name": "EVALUATION_SCHEDULER",
-						"class_name": "EvaluationScheduler"
+						"class_name": "EvaluationScheduler",
 					},
 					{
 						"name": "LINK_CLICK_TRACKER_OBJECT",
-						"class_name": "LinkClickTracker"
-					}
-				]
+						"class_name": "LinkClickTracker",
+					},
+				],
 			},
 			"kv_namespaces": [
 				{
 					"binding": "CACHE",
-					"id": "746c663591c1472eb4c27d55cd4beb6b",
-					"remote": true
-				}
+					//* Modified
+					"id": "6a7bc6c98db8406093c2423e3ac2cbd1",
+					//* Removed since we're not going to be developing in production
+					// "remote": true,
+				},
 			],
 			"migrations": [
 				{
 					"tag": "v1",
 					//~ Is not using SQLite, only KV
-					"new_classes": ["EvaluationScheduler"]
+					"new_classes": ["EvaluationScheduler"],
 				},
 				{
 					"tag": "v2",
-					"new_sqlite_classes": ["LinkClickTracker"]
-				}
+					"new_sqlite_classes": ["LinkClickTracker"],
+				},
 			],
 			"queues": {
 				"consumers": [
 					{
-						"queue": "smart-links-data-queue-stage"
-					}
+						"queue": "smart-links-data-queue-production",
+					},
 				],
 				"producers": [
 					{
 						"binding": "QUEUE",
-						"queue": "smart-links-data-queue-stage"
-					}
-				]
+						"queue": "smart-links-data-queue-production",
+					},
+				],
 			},
 			"r2_buckets": [
 				{
 					"binding": "BUCKET",
-					"bucket_name": "smart-links-eval-stage"
-					//~ In case we need to read the files
-					// "remote": true
-				}
+					//* Modified
+					"bucket_name": "smart-links-eval-production",
+				},
 			],
 			"workflows": [
 				{
 					"binding": "DESTINATION_EVALUATION_WORKFLOW",
 					"class_name": "DestinationEvaluationWorkflow",
-					"name": "destination-evaluation-workflow"
-				}
-			]
-		}
-	}
+					//* Modified
+					"name": "destination-evaluation-workflow-production",
+				},
+			],
+		},
+		"stage": {
+			"ai": {
+				"binding": "AI",
+			},
+			"browser": {
+				"binding": "VIRTUAL_BROWSER",
+			},
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_id": "72d611c5-3bcd-4f6a-aeb7-e81b4eee96af",
+					"remote": true,
+				},
+			],
+			"durable_objects": {
+				"bindings": [
+					{
+						"name": "EVALUATION_SCHEDULER",
+						"class_name": "EvaluationScheduler",
+					},
+					{
+						"name": "LINK_CLICK_TRACKER_OBJECT",
+						"class_name": "LinkClickTracker",
+					},
+				],
+			},
+			"kv_namespaces": [
+				{
+					"binding": "CACHE",
+					"id": "746c663591c1472eb4c27d55cd4beb6b",
+					"remote": true,
+				},
+			],
+			"migrations": [
+				{
+					"tag": "v1",
+					//~ Is not using SQLite, only KV
+					"new_classes": ["EvaluationScheduler"],
+				},
+				{
+					"tag": "v2",
+					"new_sqlite_classes": ["LinkClickTracker"],
+				},
+			],
+			"queues": {
+				"consumers": [
+					{
+						"queue": "smart-links-data-queue-stage",
+					},
+				],
+				"producers": [
+					{
+						"binding": "QUEUE",
+						"queue": "smart-links-data-queue-stage",
+					},
+				],
+			},
+			"r2_buckets": [
+				{
+					"binding": "BUCKET",
+					"bucket_name": "smart-links-eval-stage",
+					//~ In case we need to read the files
+					// "remote": true
+				},
+			],
+			"workflows": [
+				{
+					"binding": "DESTINATION_EVALUATION_WORKFLOW",
+					"class_name": "DestinationEvaluationWorkflow",
+					"name": "destination-evaluation-workflow",
+				},
+			],
+		},
+	},
 }
