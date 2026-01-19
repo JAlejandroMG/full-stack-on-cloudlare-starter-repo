@@ -16,10 +16,7 @@ App.get('/click-socket', async (c) => {
 		return c.text('Expected Upgrade: websocket', 426);
 	}
 
-	//* Modified
 	const accountId = c.req.header('account-id');
-	//* Removed
-	// const accountId = '1234567890';
 
 	if (!accountId) return c.text('No Headers', 404);
 
