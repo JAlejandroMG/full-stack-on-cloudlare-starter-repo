@@ -14,11 +14,8 @@
 	"observability": {
 		"enabled": true,
 	},
-	//* Added
 	"env": {
-		//* Added
 		"stage": {
-			//* Modified
 			"d1_databases": [
 				{
 					"binding": "DB",
@@ -30,7 +27,6 @@
 				{
 					"binding": "BACKEND_SERVICE",
 					"remote": true,
-					//* Modified
 					"service": "data-service-stage",
 				},
 			],
